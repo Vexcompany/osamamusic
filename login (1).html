@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Osama Music</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#080808;--bg2:#0e0e0e;--s1:#111111;--s2:#171717;--s3:#1e1e1e;
+  --bd:rgba(255,255,255,.07);--bd2:rgba(255,255,255,.13);--bd3:rgba(255,255,255,.2);
+  --tx:#f5f0e8;--t2:#7a7060;--t3:#3d3830;
+  --gold:#c9a84c;--gold2:#e8c96a;--gold3:#f5dfa0;
+  --gold-glow:rgba(201,168,76,.22);--gold-bg:rgba(201,168,76,.07);
+  --rd:#e05555;
+}
+html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--tx);overflow:hidden}
+@media(max-width:500px){body{overflow:auto}}
+
+.scene{position:fixed;inset:0;pointer-events:none;z-index:0}
+.grain{position:absolute;inset:0;opacity:.028;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:256px 256px}
+.halo{position:absolute;border-radius:50%;filter:blur(100px)}
+.halo1{width:700px;height:700px;background:radial-gradient(ellipse,rgba(201,168,76,.065) 0%,transparent 70%);top:-280px;left:-180px;animation:breathe 22s ease-in-out infinite}
+.halo2{width:500px;height:500px;background:radial-gradient(ellipse,rgba(201,168,76,.04) 0%,transparent 70%);bottom:-200px;right:-120px;animation:breathe 28s ease-in-out infinite reverse}
+.halo3{width:300px;height:300px;background:radial-gradient(ellipse,rgba(245,223,160,.03) 0%,transparent 70%);top:45%;left:52%;animation:breathe 16s ease-in-out infinite 6s}
+@keyframes breathe{0%,100%{transform:scale(1) translate(0,0)}50%{transform:scale(1.12) translate(30px,-40px)}}
+
+.lines{position:absolute;inset:0;background-image:linear-gradient(rgba(201,168,76,.018) 1px,transparent 1px);background-size:100% 80px;mask-image:radial-gradient(ellipse 70% 60% at 50% 50%,black 0%,transparent 100%)}
+
+.page{position:relative;z-index:1;height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+@media(max-width:500px){.page{align-items:flex-start;padding-top:40px}}
+
+.card{width:100%;max-width:420px;background:rgba(14,14,14,.94);border:1px solid var(--bd2);border-radius:24px;padding:44px 38px 38px;box-shadow:0 48px 90px rgba(0,0,0,.85),inset 0 1px 0 rgba(255,255,255,.04);backdrop-filter:blur(28px);animation:cardIn .55s cubic-bezier(.16,1,.3,1)}
+@keyframes cardIn{from{opacity:0;transform:translateY(28px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+
+.brand{display:flex;align-items:center;gap:14px;margin-bottom:38px}
+.brand-ico{width:46px;height:46px;border-radius:14px;flex-shrink:0;background:linear-gradient(135deg,#1a1408,#2e2210);border:1px solid rgba(201,168,76,.3);display:flex;align-items:center;justify-content:center;box-shadow:0 0 24px rgba(201,168,76,.15)}
+.brand-ico svg{width:22px;height:22px}
+.brand-text{}
+.brand-name{font-size:1.25rem;font-weight:800;letter-spacing:-.02em;background:linear-gradient(135deg,var(--gold3) 0%,var(--gold) 60%,var(--gold2) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
+.brand-sub{font-size:.6rem;color:var(--t2);letter-spacing:2.5px;text-transform:uppercase;margin-top:4px}
+
+.divider-line{height:1px;background:linear-gradient(90deg,transparent,var(--bd2),transparent);margin:0 0 28px}
+
+.ip-check{text-align:center;padding:8px 0 4px}
+.ip-spinner{width:36px;height:36px;border-radius:50%;border:2px solid var(--bd2);border-top-color:var(--gold);animation:spin .7s linear infinite;margin:0 auto 14px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ip-text{font-size:.8rem;color:var(--t2)}
+
+.login-panel{display:none}
+.login-panel.show{display:block}
+
+.eyebrow{font-size:.6rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--t2);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.eyebrow::before,.eyebrow::after{content:'';flex:1;height:1px;background:var(--bd)}
+
+.headline{font-size:1.35rem;font-weight:800;letter-spacing:-.02em;line-height:1.2;margin-bottom:8px}
+.subline{font-size:.82rem;color:var(--t2);line-height:1.6;margin-bottom:28px}
+
+.google-btn{width:100%;padding:14px 20px;border-radius:12px;border:1px solid var(--bd2);background:var(--s2);color:var(--tx);font-family:'Plus Jakarta Sans',sans-serif;font-size:.9rem;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:12px;transition:all .22s;position:relative;overflow:hidden}
+.google-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--gold-bg),transparent);opacity:0;transition:opacity .22s}
+.google-btn:hover{border-color:rgba(201,168,76,.35);box-shadow:0 0 0 3px rgba(201,168,76,.08)}
+.google-btn:hover::before{opacity:1}
+.google-btn:active{transform:scale(.99)}
+.google-btn svg{width:18px;height:18px;flex-shrink:0}
+
+.divider-or{display:flex;align-items:center;gap:10px;margin:18px 0;font-size:.68rem;color:var(--t3);font-weight:600;letter-spacing:1px;text-transform:uppercase}
+.divider-or::before,.divider-or::after{content:'';flex:1;height:1px;background:var(--bd)}
+
+.feat-list{display:flex;flex-direction:column;gap:8px}
+.feat-item{display:flex;align-items:center;gap:10px;font-size:.76rem;color:var(--t2);padding:8px 10px;border-radius:9px;background:var(--s1);border:1px solid var(--bd)}
+.feat-item i{color:var(--gold);font-size:.75rem;width:14px;text-align:center;flex-shrink:0}
+
+.err-msg{font-size:.75rem;color:var(--rd);text-align:center;padding:10px;border-radius:8px;background:rgba(224,85,85,.07);border:1px solid rgba(224,85,85,.15);display:none;margin-top:14px}
+.err-msg.show{display:block}
+
+.foot{margin-top:24px;text-align:center;font-size:.68rem;color:var(--t3)}
+.foot a{color:var(--gold);text-decoration:none;transition:color .18s}
+.foot a:hover{color:var(--gold2)}
+
+@media(max-width:500px){.card{padding:28px 20px 26px;border-radius:20px}}
+</style>
+</head>
+<body>
+
+<div class="scene">
+  <div class="grain"></div>
+  <div class="halo halo1"></div>
+  <div class="halo halo2"></div>
+  <div class="halo halo3"></div>
+  <div class="lines"></div>
+</div>
+
+<div class="page">
+  <div class="card">
+
+    <div class="brand">
+      <div class="brand-ico">
+        <svg viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="10" stroke="#c9a84c" stroke-width="1.5"/>
+          <circle cx="12" cy="12" r="3" fill="#c9a84c"/>
+          <path d="M12 2v3M12 19v3M2 12h3M19 12h3" stroke="#c9a84c" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <div class="brand-name">Osama Music</div>
+        <div class="brand-sub">Premium · Private</div>
+      </div>
+    </div>
+
+    <div class="divider-line"></div>
+
+    <div class="ip-check" id="ipCheck">
+      <div class="ip-spinner"></div>
+      <div class="ip-text">Memeriksa sesi kamu...</div>
+    </div>
+
+    <div class="login-panel" id="loginPanel">
+      <div class="eyebrow">Selamat datang</div>
+      <div class="headline">Masuk ke<br>Osama Music</div>
+      <div class="subline">Gunakan akun Google kamu. Setelah login, perangkat ini akan dikenali otomatis.</div>
+
+      <button class="google-btn" id="googleBtn" onclick="loginGoogle()">
+        <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        Lanjutkan dengan Google
+      </button>
+
+      <div class="divider-or">atau</div>
+
+      <div class="feat-list">
+        <div class="feat-item"><i class="fas fa-bolt"></i> Auto-login di perangkat yang sama</div>
+        <div class="feat-item"><i class="fas fa-heart"></i> Simpan lagu favorit & queue</div>
+        <div class="feat-item"><i class="fas fa-compact-disc"></i> Akses semua lagu & VTuber Archive</div>
+      </div>
+
+      <div class="err-msg" id="errMsg"></div>
+    </div>
+
+    <div class="foot">Osama Music &copy; 2025 &nbsp;·&nbsp; <a href="#" onclick="loginGoogle()">Login &rarr;</a></div>
+
+  </div>
+</div>
+
+<script>
+const BACKEND = 'https://vex.web.id';
+
+async function checkIp() {
+  try {
+    const r = await fetch(`${BACKEND}/api/auth/check-ip`, { credentials: 'include' });
+    const d = await r.json();
+    if (d.ok) {
+      window.location.href = 'index.html';
+    } else {
+      showLogin();
+    }
+  } catch {
+    showLogin();
+  }
+}
+
+function showLogin() {
+  document.getElementById('ipCheck').style.display = 'none';
+  document.getElementById('loginPanel').classList.add('show');
+
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('error')) {
+    const msg = document.getElementById('errMsg');
+    const errs = { oauth_denied: 'Login dibatalkan.', server_error: 'Terjadi kesalahan server. Coba lagi.' };
+    msg.textContent = errs[params.get('error')] || 'Login gagal. Coba lagi.';
+    msg.classList.add('show');
+  }
+}
+
+function loginGoogle() {
+  const btn = document.getElementById('googleBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Menghubungkan...';
+  window.location.href = `${BACKEND}/api/auth/google`;
+}
+
+checkIp();
+</script>
+</body>
+</html>
