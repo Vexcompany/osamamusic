@@ -1133,9 +1133,9 @@ let volume        = 0.7;
 audio.volume      = volume;
 
 function playTrack(track) {
-  if (!track || !track.audio) return;
+  if (!track || !track.audio_url) return;
   currentTrack = track;
-  audio.src    = track.audio || track.audioUrl || track.audio_url;
+  audio.src    = track.audio_url;
   audio.load();
   audio.play().then(() => { isPlaying = true; updatePlayerUI(); updateNpUI(); }).catch(e => { showToast('Gagal memutar: ' + e.message); });
   updateHeroUI(track);
@@ -1371,7 +1371,7 @@ function showSearchResults(results, q) {
         <div class="sr-meta">
           <span>${sanitize(t.artist)}</span>
           ${t.year ? `<span>· ${t.year}</span>` : ''}
-          ${!t.audio && !t.audioUrl ? `<span class="sr-badge">No Audio</span>` : ''}
+          ${!t.audio_url ? `<span class="sr-badge">No Audio</span>` : ''}
         </div>
       </div>
       <button class="sr-play" onclick="event.stopPropagation();srResults&&playTrack(srResults[${i}])"><i class="fas fa-play"></i></button>
@@ -1427,9 +1427,9 @@ function fillSearch(q) { document.getElementById('sInput').value = q; doSearch()
 // ── QUICK PLAY ────────────────────────────────
 async function loadQuickPlay() {
   try {
-    const r = await sbFetch('/tracks?select=id,title,artist,thumbnail,audio,audioUrl,duration,year,source,album&limit=20&order=play_count.desc');
+    const r = await sbFetch('/tracks?select=id,title,artist,thumbnail,audio_url,duration,year,source,album&limit=20&order=play_count.desc');
     if (!r?.length) return;
-    const tracks = r.filter(t => t.audio || t.audioUrl);
+    const tracks = r.filter(t => t.audio_url);
     queueTracks  = tracks;
     const sec = document.getElementById('quickPlaySec');
     sec.style.display = 'block';
@@ -1461,7 +1461,7 @@ let allTracks = [], expFiltered = [];
 async function initExplore() {
   if (allTracks.length) return;
   try {
-    const r = await sbFetch('/tracks?select=id,title,artist,thumbnail,audio,audioUrl,duration,year,source,album&limit=500');
+    const r = await sbFetch('/tracks?select=id,title,artist,thumbnail,audio_url,duration,year,source,album&limit=500');
     allTracks = r || [];
     renderExpArtistFilter();
     renderExpResults(allTracks);
