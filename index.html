@@ -1427,7 +1427,7 @@ function fillSearch(q) { document.getElementById('sInput').value = q; doSearch()
 // ── QUICK PLAY ────────────────────────────────
 async function loadQuickPlay() {
   try {
-    const r = await sbFetch('/tracks?select=id,title,artist,thumbnail,audio_url,duration,year,source,album&limit=20&order=play_count.desc');
+    const r = await sbFetch('/tracks?select=id,title,artist,thumbnail,audio_url,duration,year,source,album&limit=100&order=play_count.desc');
     if (!r?.length) return;
     const tracks = r.filter(t => t.audio_url);
     queueTracks  = tracks;
