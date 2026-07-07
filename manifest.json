@@ -1,7 +1,7 @@
 {
-  "name": "Pagaska Music",
-  "short_name": "Pagaska",
-  "description": "Platform musik eksklusif Paskibra Gala Taksaka SMKN 5 Kota Madiun",
+  "name": "Osama Music",
+  "short_name": "Osama",
+  "description": "Platform musik eksklusif Osis SMKN 5 Kota Madiun",
   "start_url": "/index.html",
   "scope": "/",
   "display": "standalone",
