@@ -12,12 +12,15 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Osama Music">
 <link rel="apple-touch-icon" href="/icons/icon-180.png">
+<!-- Preconnect: percepat koneksi ke domain eksternal -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://cdnjs.cloudflare.com">
 <link rel="dns-prefetch" href="https://ygwoddwdhelqcwhpqasl.supabase.co">
+<!-- Font Awesome: media print trick agar tidak blocking render -->
 <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"></noscript>
+<!-- Google Fonts: display=swap sudah ada, tambah preload woff2 subset latin -->
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 /* ═══ DESIGN TOKENS ═══ */
@@ -747,7 +750,7 @@ body::after{content:'';position:fixed;inset:0;z-index:1;pointer-events:none;back
   <div class="tb-inner">
     <a class="tb-brand" href="#" onclick="navigate('beranda');return false">
       <div class="tb-logo"><i class="fab fa-spotify"></i></div>
-      <span class="tb-brand-name">Osama </span>
+      <span class="tb-brand-name">Osama/span>
     </a>
     <div class="tb-search" id="tbSearch" onclick="expandSearch(event)">
       <i class="fas fa-search tb-search-ico"></i>
@@ -1334,7 +1337,6 @@ body::after{content:'';position:fixed;inset:0;z-index:1;pointer-events:none;back
     <div class="pin-grid" id="pubPinGrid"></div>
   </div>
 </div>
-<script src="_lib/db.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js" defer></script>
 <script>
 const BACKEND_URL='https://verolyz-kingdom3.vercel.app';
@@ -1509,7 +1511,7 @@ function autoResizeChatInput(el){el.style.height='42px';el.style.height=Math.min
 function updateChatBadge(count){const badge=document.getElementById('chatBadge');const dot=document.getElementById('chatDot');if(badge){badge.textContent=count||'';badge.classList.toggle('show',count>0);}if(dot)dot.classList.toggle('show',count>0);}
 function shareCurrentTrack(){if(!currentTrack){toast('Tidak ada lagu yang sedang diputar');return;}openShareModal(currentTrack);}
 async function openShareModal(track){pendingShareTrack=track;selectedShareMembers=[];document.getElementById('shareModal').classList.add('open');const inp=document.getElementById('shareMemberSearch');if(inp){inp.value='';inp.focus();}try{const rows=await sb.get('osama_users','select=id,display_name,email,avatar_url&order=display_name.asc');_allShareUsers=rows||[];}catch{_allShareUsers=[];}_renderShareList('');}
-function _renderShareList(q){const others=_allShareUsers.filter(u=>u.id!==USER_KEY);const _n4u=u=>u.display_name||u.email?.split('@')[0]||u.id.slice(0,8);const filtered=q.trim()?others.filter(u=>_n4u(u).toLowerCase().includes(q.toLowerCase())||(u.email||'').toLowerCase().includes(q.toLowerCase())):others;const list=document.getElementById('shareMemberList');list.innerHTML=filtered.length?filtered.map(u=>{const key=u.id,name=_n4u(u),sid='sm-'+key.replace(/[^a-zA-Z0-9]/g,'_'),ini=name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2),sel=selectedShareMembers.includes(key)?'selected':'';return`<div class=\"share-member-item ${sel}\" id=\"${sid}\" onclick=\"toggleShareMember('${key.replace(/'/g,\"\\\\'\")}')\"><div class=\"share-member-av\" data-av-key=\"${key}\" data-av-ini=\"${ini}\">${ini}</div><div class=\"share-member-name\">${escapeHtml(name)}</div><div class=\"share-member-gen\">${escapeHtml(u.email||'')}</div><i class=\"fas fa-check share-check\"></i></div>`;}).join(''):'<div style=\"text-align:center;color:var(--t2);padding:20px\">Tidak ada anggota</div>';applyAvatarAfterRender(list);}
+function _renderShareList(q){const others=_allShareUsers.filter(u=>u.id!==USER_KEY);const _n4u=u=>u.display_name||u.email?.split('@')[0]||u.id.slice(0,8);const filtered=q.trim()?others.filter(u=>_n4u(u).toLowerCase().includes(q.toLowerCase())||(u.email||'').toLowerCase().includes(q.toLowerCase())):others;const list=document.getElementById('shareMemberList');list.innerHTML=filtered.length?filtered.map(u=>{const key=u.id,name=_n4u(u),sid='sm-'+key.replace(/[^a-zA-Z0-9]/g,'_'),ini=name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2),sel=selectedShareMembers.includes(key)?'selected':'';return`<div class="share-member-item ${sel}" id="${sid}" onclick="toggleShareMember('${key.replace(/'/g,"\\'")}')">`+`<div class="share-member-av" data-av-key="${key}" data-av-ini="${ini}">${ini}</div>`+`<div class="share-member-name">${escapeHtml(name)}</div>`+`<div class="share-member-gen">${escapeHtml(u.email||'')}</div>`+`<i class="fas fa-check share-check"></i></div>`;}).join(''):'<div style="text-align:center;color:var(--t2);padding:20px">Tidak ada anggota</div>';applyAvatarAfterRender(list);}
 function toggleShareMember(key){const sid='sm-'+key.replace(/[^a-zA-Z0-9]/g,'_');const el=document.getElementById(sid);const idx=selectedShareMembers.indexOf(key);if(idx>-1){selectedShareMembers.splice(idx,1);el?.classList.remove('selected');}else{selectedShareMembers.push(key);el?.classList.add('selected');}}
 async function confirmShareTrack(){if(!selectedShareMembers.length){toast('Pilih minimal 1 anggota');return;}if(!pendingShareTrack)return;const btn=document.getElementById('shareConfirmBtn');btn.disabled=true;btn.innerHTML='<i class="fas fa-circle-notch spin"></i> Mengirim...';try{for(const toKey of selectedShareMembers)await sb.post('messages',{from_key:USER_KEY,to_key:toKey,track_id:pendingShareTrack.id,content:`🎵 ${pendingShareTrack.title} — ${pendingShareTrack.artist}`,created_at:new Date().toISOString()});toast(`✅ Lagu dikirim ke ${selectedShareMembers.length} anggota!`);closeShareModal();}catch(e){toast('Gagal kirim: '+e.message);}btn.disabled=false;btn.innerHTML='<i class="fas fa-paper-plane"></i> Kirim';}
 function closeShareModal(e){if(e&&e.target!==document.getElementById('shareModal'))return;document.getElementById('shareModal').classList.remove('open');pendingShareTrack=null;selectedShareMembers=[];}
